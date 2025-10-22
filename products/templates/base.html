@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django CRUD</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/daf8c554e7.js" crossorigin="anonymous"></script>
+    {% load static %}
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Django Manager</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link">Home</a>
+                    </li>
+            
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a href="/products" class="nav-link">Productos por enviar</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="/products_to_send/" class="nav-link">Productos enviados</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="/product/create/" class="nav-link">Crear productos</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="/logout" class="nav-link">Logout</a>
+                        </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a href="/signup" class="nav-link">Signup</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/signin" class="nav-link">Signin</a>
+                    </li>
+                    {% endif %}
+                </ul>
+        </div>
+    </div>
+</nav>
+    
+    {% block content %}
+    {% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<main class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h1 class="text-center display-3 py-5">Products Pending</h1>
+
+            <ul class="list-group">
+                {% for producto in productos %}
+                    <a class="list-group-item" href=" {% url 'products_detail' producto.id %} ">
+                        <header class="d-flex justify-content-between">
+                            {% if producto.important %}
+                            <h2 class="fw-bold text-success">{{producto.title}}</h2>
+                            {% else %}
+                                <h2 class="fw-bold">{{producto.title}}</h2>
+                            {% endif %}
+                            <p>Usuario: {{producto.user.username}}</p>
+                        </header>
+
+                        <p>{{producto.description}}</p>
+                        
+
+                        <p>{{producto.datecompleted|date:'M J Y:i'}}</p>
+
+                    <img src="{{producto.imagen}}" alt="">
+                    </a>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</main>
+
+{% endblock %}
