@@ -9,6 +9,7 @@ from .models import Producto
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 # Create your views here.
 def home(request):
@@ -70,13 +71,13 @@ def signup(request):
 @login_required
 def products(request):
     
-    product = Producto.objects.filter(user=request.user, datecompleted__isnull=True)
-    return render(request, 'products.html', {'productos': product})
+    productos = Producto.objects.filter(user=request.user, datecompleted__isnull=True)
+    return render(request, 'products.html', {'productos': productos})
 
 @login_required
 def products_to_send(request):
-    product = Producto.objects.filter(user=request.user, datecompleted__isnull=False).order_by('-datecompleted')
-    return render(request, 'products.html', {'product': product})
+    productos = Producto.objects.filter(user=request.user, datecompleted__isnull=False).order_by('-datecompleted')
+    return render(request, 'products.html', {'productos': productos})
 
 @login_required
 def create_product(request):
@@ -101,31 +102,34 @@ def create_product(request):
 @login_required
 def product_detail(request, products_id:int):
     if request.method == 'GET':
-        product = get_object_or_404(Producto, pk=products_id, user=request.user)
-        form = ProductForm(instance=product)
-        return render(request, 'products_detail.html', {'product': product, 'form': form})
+        producto = get_object_or_404(Producto, pk=products_id, user=request.user)
+        form = ProductForm(instance=producto)
+        return render(request, 'products_detail.html', {'productos': producto, 'form': form})
     else:
         try:
-            product = get_object_or_404(Producto, pk=products_id, user=request.user)
-            form = ProductForm(request.POST, instance=product)
+            producto = get_object_or_404(Producto, pk=products_id, user=request.user)
+            form = ProductForm(request.POST, instance=producto)
             form.save()
             return redirect('products')
         except ValueError:
-            return render(request, 'task_detail.html', {'product': product, 'form': form, 'error': "Error updating task"})
+            return render(request, 'products_detail.html', {'productos': producto, 'form': form, 'error': "Error updating product"})
 
 def sent_product(request, products_id:int):
     # Productos enviados
-    product = get_object_or_404(Producto, pk=products_id, user=request.user)
+    # Se asegura de obtener el producto SOLO si pertenece al usuario logueado
+    producto = get_object_or_404(Producto, pk=products_id, user=request.user)
     if request.method == 'POST':
-        product.datecompleted = timezone.now()
-        product.save()
+        # La condición se cumple: el producto existe y pertenece al usuario.
+        # Se marca como 'enviado' (datecompleted)
+        producto.datecompleted = timezone.now()
+        producto.save()
         return redirect('products')
 
 
 def delete_product(request, products_id:int):
-    product = get_object_or_404(Producto, pk=products_id, user=request.user)
+    producto = get_object_or_404(Producto, pk=products_id, user=request.user)
     if request.method == 'POST':
-        product.delete()
+        producto.delete()
         return redirect('products')
 
 
@@ -178,8 +182,18 @@ def signin(request):
             return redirect('products')
         
 class ItemListView(generics.ListAPIView):
-    # 1. queryset: Define qué ítems se van a obtener (todos en este caso)
-    queryset = Producto.objects.all()
-
-    # 2. serializer_class: Indica qué serializador usar para convertir los ítems a JSON
+    # 1. El serializador sigue siendo el mismo para dar formato al JSON
     serializer_class = ItemSerializer
+    
+    # 2. Permisos: Si quieres que CUALQUIERA pueda ver todos los productos, 
+    # usa AllowAny. Si solo quieres que usuarios logueados los vean, usa IsAuthenticated.
+    # Usaremos una opción permisiva para el objetivo de "todos los productos".
+    # Importa AllowAny si no está ya: from rest_framework.permissions import AllowAny
+    # permission_classes = [AllowAny] # Puedes añadir esto si no quieres autenticación
+
+    def get_queryset(self):
+        """
+        Retorna la lista de TODOS los productos creados por TODOS los usuarios.
+        """
+        # Esta es la consulta clave: .objects.all() obtiene toda la tabla 'Producto'.
+        return Producto.objects.all().order_by('-created')

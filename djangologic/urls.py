@@ -31,8 +31,9 @@ urlpatterns = [
     path('product/create/', views.create_product, name='create_product'),
     path('products/<int:products_id>/', views.product_detail, name='products_detail'),
     path('api/', include('products.urls')),
-    path('products/<int:products_id>/complete', views.sent_product, name='sent_product'), # type: ignore
-    path('products/<int:products_id>/delete', views.delete_product, name='delete_task'), # <-- Asegúrate de la coma # type: ignore
+    # urls.py
+    path('products/<int:products_id>/complete', views.sent_product, name='complete_products'), # type: ignore
+    path('products/<int:products_id>/delete', views.delete_product, name='delete_products'), # <-- Asegúrate de la coma # type: ignore
 ]
 
 if settings.DEBUG:

@@ -22,7 +22,9 @@
 
                         <p>{{producto.datecompleted|date:'M J Y:i'}}</p>
 
-                    <img src="{{producto.imagen}}" alt="">
+                        {% if producto.imagen %}
+                            <img src="{{ producto.imagen.url }}" alt="{{ producto.title }}" class="img-fluid" style="max-width: 100px; height: auto;">
+                        {% endif %}
                     </a>
                 {% endfor %}
             </ul>
