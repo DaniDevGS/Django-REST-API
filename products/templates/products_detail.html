@@ -10,18 +10,18 @@
             <form method="POST">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button class="btn btn-info">Update</button>
+                <button class="btn btn-info">Actualizar</button>
             </form>
 
             <div class="mt-5 d-flex">
                 <form action="{% url 'complete_products' productos.id %}" method="POST">
                     {% csrf_token %}
-                    <button class="btn btn-primary">Complete</button>
+                    <button class="btn btn-primary">Subir</button>
                 </form>
 
                 <form action="{% url 'delete_products' productos.id %}" method="POST">
                     {% csrf_token %}
-                    <button class="btn btn-danger">Delete</button>
+                    <button class="btn btn-danger">Eliminar</button>
                 </form>
             </div>
         </div>

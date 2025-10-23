@@ -7,10 +7,13 @@ cryptography==46.0.3
 dj-database-url==3.0.1
 Django==5.2.7
 django-allauth==65.12.1
+django-cors-headers==4.9.0
+djangorestframework==3.16.1
 gunicorn==23.0.0
 idna==3.11
 oauthlib==3.3.1
 packaging==25.0
+pillow==12.0.0
 psycopg2-binary==2.9.11
 pycparser==2.23
 PyJWT==2.10.1
