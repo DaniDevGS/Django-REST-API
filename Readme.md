@@ -64,17 +64,44 @@ La API expone los siguientes puntos de conexión REST (actualmente solo soporta 
 | **GET** | **/api/products/?format=json** | Obtiene la lista completa de todos los productos enviados	 |
 ---
 
-### Ejemplo: Obtener un Producto
-Para obtener la información de Tanjiro Kamado (ID 1), haz una solicitud a:
+### Ejemplo: Obtener un Producto:
 
 ```bash
 
-GET [http://127.0.0.1:5000/api/characters/1](http://127.0.0.1:5000/api/characters/1)
+GET [http://127.0.0.1:8000/api/products/?format=json]
 ```
 
 ### Respuesta (JSON):
 ```json
-{
+[
+  {
+    "id": 7,
+    "título": "Papas fritas con toddy",
+    "descripción": "Papas fritas con toddy",
+    "precio": "6.00",
+    "fecha de finalización": "2025-10-23T11:03:13Z",
+    "imagen": "http://localhost:8000/media/productos/Toddy_chips.jpg",
+    "usuario": 2
+  },
+  {
+    "id": 6,
+    "título": "Toddy",
+    "description": "Alimento Venezolano chocolatado",
+    "precio": "10.00",
+    "fecha de finalización": "2025-10-23T11:03:11Z",
+    "imagen": "http://localhost:8000/media/productos/Toddy.jpg",
+    "usuario": 2
+  },
+  {
+    "id": 5,
+    "título": "Nestlé",
+    "description": "Un alimento nutritivo",
+    "precio": "100.00",
+    "fecha de finalización": "2025-10-23T00:33:19Z",
+    "imagen": "http://localhost:8000/media/productos/Nestle.jpeg",
+    "usuario": 2
+  },
+  {
     "id": 1,
     "título": "iPhone 17",
     "description": "Celular de Apple",
@@ -83,7 +110,5 @@ GET [http://127.0.0.1:5000/api/characters/1](http://127.0.0.1:5000/api/character
     "imagen": "http://localhost:8000/media/productos/iPhone17.jpg",
     "usuario": 1
   }
+]
 ```
-
-
-/api/products/?format=json
