@@ -182,18 +182,9 @@ def signin(request):
             return redirect('products')
         
 class ItemListView(generics.ListAPIView):
-    # 1. El serializador sigue siendo el mismo para dar formato al JSON
-    serializer_class = ItemSerializer
+    # Esto le dice a DRF que use ItemSerializer
+    serializer_class = ItemSerializer 
     
-    # 2. Permisos: Si quieres que CUALQUIERA pueda ver todos los productos, 
-    # usa AllowAny. Si solo quieres que usuarios logueados los vean, usa IsAuthenticated.
-    # Usaremos una opción permisiva para el objetivo de "todos los productos".
-    # Importa AllowAny si no está ya: from rest_framework.permissions import AllowAny
-    # permission_classes = [AllowAny] # Puedes añadir esto si no quieres autenticación
-
     def get_queryset(self):
-        """
-        Retorna la lista de TODOS los productos creados por TODOS los usuarios.
-        """
-        # Esta es la consulta clave: .objects.all() obtiene toda la tabla 'Producto'.
+        # Esto obtiene TODOS los objetos Producto
         return Producto.objects.all().order_by('-created')

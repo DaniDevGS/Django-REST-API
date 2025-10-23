@@ -1,0 +1,3 @@
+#
+
+/api/products/?format=json
