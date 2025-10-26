@@ -12,6 +12,14 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 # Create your views here.
+from rest_framework.decorators import api_view, permission_classes # New
+from rest_framework.response import Response # New
+from rest_framework import status # New
+from rest_framework.permissions import AllowAny # New
+from rest_framework.authtoken.models import Token # New - For Token Authentication
+from django.views.decorators.csrf import csrf_exempt # New - For Signout
+
+
 def home(request):
     """Renderiza la página de inicio.
 
@@ -24,6 +32,74 @@ def home(request):
         Un objeto HttpResponse que renderiza 'home.html'.
     """
     return render(request, 'home.html')
+
+# API DE SIGNUP
+
+@api_view(['POST'])
+@permission_classes([AllowAny]) # Allow anyone to access this view
+def signup_api(request):
+    """API para registrar un nuevo usuario."""
+    username = request.data.get('username')
+    password = request.data.get('password')
+    password2 = request.data.get('password2') # Assuming you send both passwords from the frontend
+
+    if not all([username, password, password2]):
+        return Response({'error': 'Todos los campos son obligatorios.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if password != password2:
+        return Response({'error': 'Las contraseñas no coinciden.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        user = User.objects.create_user(username=username, password=password)
+        user.save()
+        
+        # Crea un token para el nuevo usuario
+        token, created = Token.objects.get_or_create(user=user)
+        
+        # Retorna el token al frontend
+        return Response({'token': token.key, 'username': user.username}, status=status.HTTP_201_CREATED)
+    
+    except IntegrityError:
+        return Response({'error': 'El nombre de usuario ya existe.'}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+# API DE SIGNIN
+
+@api_view(['POST'])
+@permission_classes([AllowAny]) # Allow anyone to access this view
+def signin_api(request):
+    """API para iniciar sesión y obtener un token."""
+    username = request.data.get('username')
+    password = request.data.get('password')
+
+    user = authenticate(request, username=username, password=password)
+
+    if user is None:
+        return Response({'error': 'Usuario o contraseña incorrectos.'}, status=status.HTTP_401_UNAUTHORIZED)
+    else:
+        # Obtiene o crea el token para el usuario
+        token, created = Token.objects.get_or_create(user=user)
+        
+        # Retorna el token
+        return Response({'token': token.key, 'username': user.username}, status=status.HTTP_200_OK)
+
+# API DE SIGNOUT
+@api_view(['POST'])
+def signout_api(request):
+    """API para cerrar sesión (simplemente elimina el token de autenticación del usuario)."""
+    # Esta vista requiere que el usuario envíe el token en el encabezado 'Authorization'
+    if request.auth: # request.auth is the token object if authenticated
+        try:
+            # Elimina el token del usuario (invalida la sesión actual del API)
+            request.auth.delete() 
+            return Response({'message': 'Sesión cerrada exitosamente.'}, status=status.HTTP_200_OK)
+        except Exception:
+            # Si no se puede eliminar el token (por ejemplo, si ya se eliminó), al menos responde OK
+            return Response({'message': 'Sesión cerrada exitosamente.'}, status=status.HTTP_200_OK)
+    
+    # En este caso, el token no estaba presente o era inválido, pero respondemos que la sesión está cerrada.
+    return Response({'message': 'No hay sesión activa para cerrar.'}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 def signup(request):
     """Gestiona el registro de nuevos usuarios.
