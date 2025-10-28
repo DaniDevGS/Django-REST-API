@@ -19,21 +19,9 @@ from rest_framework.permissions import AllowAny # New
 from rest_framework.authtoken.models import Token # New - For Token Authentication
 from django.views.decorators.csrf import csrf_exempt # New - For Signout
 
-
-def home(request):
-    """Renderiza la página de inicio.
-
-    Esta vista simplemente devuelve la plantilla 'home.html'.
-
-    Args:
-        request: El objeto HttpRequest entrante.
-
-    Returns:
-        Un objeto HttpResponse que renderiza 'home.html'.
-    """
-    return render(request, 'home.html')
-
-# API DE SIGNUP
+# ===============================================================================================================
+#===================================APIs de Login o Register=====================================================
+# ===============================================================================================================
 
 @api_view(['POST'])
 @permission_classes([AllowAny]) # Allow anyone to access this view
@@ -101,6 +89,23 @@ def signout_api(request):
     return Response({'message': 'No hay sesión activa para cerrar.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
+# ===============================================================================================================
+#===================================DJANGO CRUD==================================================================
+# ===============================================================================================================
+
+def home(request):
+    """Renderiza la página de inicio.
+
+    Esta vista simplemente devuelve la plantilla 'home.html'.
+
+    Args:
+        request: El objeto HttpRequest entrante.
+
+    Returns:
+        Un objeto HttpResponse que renderiza 'home.html'.
+    """
+    return render(request, 'home.html')
+
 def signup(request):
     """Gestiona el registro de nuevos usuarios.
 
@@ -148,12 +153,12 @@ def signup(request):
 def products(request):
     
     productos = Producto.objects.filter(user=request.user, datecompleted__isnull=True)
-    return render(request, 'products.html', {'productos': productos})
+    return render(request, 'products.html', {'productos': productos , 'sent_view': False})
 
 @login_required
 def products_to_send(request):
     productos = Producto.objects.filter(user=request.user, datecompleted__isnull=False).order_by('-datecompleted')
-    return render(request, 'products.html', {'productos': productos})
+    return render(request, 'products.html', {'productos': productos, 'sent_view': True})
 
 @login_required
 def create_product(request):
