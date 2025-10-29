@@ -1,35 +1,43 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<main class="container">
-        <div class="row">
-            <div class="col-md-4 offset-md-4 mt-5">
-                <form method="POST" class="card card-body">
+<main class="container py-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3 col-lg-4 offset-lg-4">
+            <form method="POST" class="card card-body p-5 shadow-lg bg-white border-0">
 
-                    <h1 class="text-center">Signup</h1>
-                    {{error}}
-                    {% csrf_token %}
-
-                    <div class="mb-3">
-                        <label for="id_username">Username:</label>
-                        <input type="text" name="username" class="form-control" placeholder="Write your username" required id="id_username">
+                <h1 class="text-center text-info mb-4 fw-bold"><i class="fa-solid fa-circle-plus me-2"></i>Registrarse</h1>
+                
+                {% if error %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
                     </div>
+                {% endif %}
+                
+                {% csrf_token %}
 
-                    <div class="mb-3">
-                        <label for="id_password1">Password:</label>
-                        <input type="password" name="password1" class="form-control" placeholder="Write your password" required id="id_password1">
-                    </div>
+                <div class="mb-3">
+                    <label for="id_username" class="form-label fw-bold">Nombre de Usuario:</label>
+                    <input type="text" name="username" class="form-control" placeholder="Escribe tu nombre de usuario" required id="id_username">
+                </div>
 
-                    <div class="mb-3">
-                        <label for="id_password2">Confirm your password:</label>
-                        <input type="password" name="password2" class="form-control" placeholder="Confirm your password" id="id_password2">
-                    </div>
-                    
-                    <button class="btn btn-primary">
-                        Signup
-                    </button>
-                </form>
-            </div>
+                <div class="mb-3">
+                    <label for="id_password1" class="form-label fw-bold">Contraseña:</label>
+                    <input type="password" name="password1" class="form-control" placeholder="Escribe tu contraseña" required id="id_password1">
+                </div>
+
+                <div class="mb-4">
+                    <label for="id_password2" class="form-label fw-bold">Confirmar Contraseña:</label>
+                    <input type="password" name="password2" class="form-control" placeholder="Confirma tu contraseña" required id="id_password2">
+                </div>
+                
+                <button class="btn btn-info btn-lg">
+                    <i class="fa-solid fa-paper-plane me-2"></i>Registrarse
+                </button>
+                <small class="text-center mt-3 text-muted">¿Ya tienes cuenta? <a href="/signin/" class="text-info fw-bold">Inicia sesión aquí</a></small>
+
+            </form>
         </div>
-    </main>
+    </div>
+</main>
 {% endblock %}

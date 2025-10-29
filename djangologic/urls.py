@@ -22,6 +22,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    #=================================VIEWS DE PRODUCTS======================================================
     path('', views.home, name='home'),
     path('signup/', views.signup, name='signup'),
     path('logout/', views.signout, name='logout'),
@@ -34,7 +36,7 @@ urlpatterns = [
     # urls.py
     path('products/<int:products_id>/complete', views.sent_product, name='complete_products'), # type: ignore
     path('products/<int:products_id>/delete', views.delete_product, name='delete_products'), # <-- Asegúrate de la coma # type: ignore
-    
+
 ]
 
 if settings.DEBUG:
